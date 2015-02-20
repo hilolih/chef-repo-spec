@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "before install fluentd" do
   describe command('ulimit -n') do
-    its(:stdout) { should match /65535/ }
+    its(:stdout) { should match /65536/ }
   end
   
   describe file('/etc/security/limits.conf') do
@@ -24,19 +24,15 @@ describe "before install fluentd" do
   
 end
 
-#  %w{
-#  mongodb-org
-#  mongodb-org-mongos
-#  mongodb-org-server
-#  mongodb-org-shell
-#  mongodb-org-tools
-#  }.each do |pkg|
-#    describe package(pkg) do
-#      it { should be_installed }
-#    end
-#  end
-#describe service('mongod') do
-#  it { should be_enabled }
-#  it { should be_running }
-#end
-#
+describe "install td-agent" do
+  describe yumrepo('treasuredata') do
+    it { should exist }
+    it { should be_enabled }
+  end
+
+  describe service('td-agent') do
+    it { should be_enabled }
+    it { should be_running }
+  end
+end
+
